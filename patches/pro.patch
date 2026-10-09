@@ -1,0 +1,35 @@
+diff --git a/src/plus/gk/subscriptionService.ts b/src/plus/gk/subscriptionService.ts
+index a023350..4e3eaa3 100644
+--- a/src/plus/gk/subscriptionService.ts
++++ b/src/plus/gk/subscriptionService.ts
+@@ -1369,6 +1369,30 @@ export class SubscriptionService implements Disposable {
+ 			state: SubscriptionState.Community,
+ 		};
+ 
++		// 统一本地订阅, 覆盖首次启动, 缓存, check-in 和退出回退.
++		const localPlan = {
++			id: 'enterprise' as const,
++			name: getSubscriptionProductPlanName('enterprise'),
++			cancelled: false,
++			expiresOn: undefined,
++		};
++		subscription = {
++			...subscription,
++			plan: {
++				actual: { ...subscription.plan.actual, ...localPlan },
++				effective: { ...subscription.plan.effective, ...localPlan },
++			},
++			account: {
++				...(subscription.account ?? {
++					id: 'insider',
++					name: 'insider',
++					email: 'insider@gitkraken.com',
++					createdOn: '2026-01-01T00:00:00.000Z',
++				}),
++				verified: true,
++			},
++		};
++
+ 		// If the effective plan has expired, then replace it with the actual plan
+ 		if (isSubscriptionExpired(subscription)) {
+ 			subscription = {
