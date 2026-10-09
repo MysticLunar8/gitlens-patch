@@ -1,6 +1,7 @@
 {
   "ignorePatterns": [
     "dist/**",
+    "bin/**",
     ".work/**"
   ]
 }
